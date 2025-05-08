@@ -10,6 +10,10 @@ Answer: Yes because this project uses filepath methods which is Clean(), Base(),
 2. Usage of filepath.Base() to get only the last item in supplied folder name avoid traversing attacks.
 3. Usage of filepath.Clean() to clean the user input folder name and automatically removes the unnecessary characters. 
 
+## Folder behavior
+1. Uses os.MkDir that only create one single folder
+2. Uses os.RemoveAll() recursively delete a folder and its contents.
+
 ## Folder env config
 1. UPLOAD_ROOT_FOLDER: this will be the upload dir for all the folder and files.
 

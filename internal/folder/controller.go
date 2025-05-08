@@ -44,7 +44,7 @@ func (c ControllerImpl) create(e *gin.Context) {
 }
 
 func (c ControllerImpl) remove(e *gin.Context) {
-	name := e.Param("name")
+	name := e.Param("folder")
 
 	err := c.service.remove(name)
 	if err != nil {
