@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"net/http"
+	"path/filepath"
+	"slices"
 )
 
 type Controller interface {
@@ -48,6 +50,14 @@ func (c ControllerImpl) upload(ctx *gin.Context) {
 		}
 	}(file)
 
+	// Validate file type
+	if !slices.Contains(AllowedFileExtensions(), filepath.Ext(header.Filename)) {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "can't upload file, file extension is not allowed",
+		})
+		return
+	}
+
 	// Validate file size
 	if header.Size > int64(MaxFileSize()) {
 		ctx.JSON(http.StatusRequestEntityTooLarge, gin.H{
@@ -55,8 +65,6 @@ func (c ControllerImpl) upload(ctx *gin.Context) {
 		})
 		return
 	}
-
-	// Validate file type
 
 	// Uploading file to local machine
 	folder := ctx.Param("folder")

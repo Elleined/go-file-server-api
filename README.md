@@ -1,8 +1,8 @@
 # FAQS
-Question: What if the folder or file doesn't exists and you try to access it
+Question: What if the folder or file doesn't exists and you try to access it  
 Answer: It will return an error if the folder doesn't exists
 
-Question: Does the user input fully sanitized? To prevent them accessing the local file tree?
+Question: Does the user input fully sanitized? To prevent them accessing the local file tree?  
 Answer: Yes because this project uses filepath methods which is Clean(), Base(), Join(), and Abs().
 
 # Folder Validation
@@ -20,7 +20,7 @@ Answer: Yes because this project uses filepath methods which is Clean(), Base(),
 # File Validation
 1. Checks if folder is in upload dir 
 2. Checks if folder exists 
-3. Checks if the file extension of file is in ALLOWED_FILE_TYPES
+3. Checks if the file extension of file is in ALLOWED_FILE_EXTENSIONS
 4. Checks the file size
 
 ### File Validation edge cases
@@ -30,7 +30,7 @@ Answer: Yes because this project uses filepath methods which is Clean(), Base(),
 ## File env config
 1. MAX_FILE_SIZE: consumer can supply the max size allowed.
 2. MAX_FILE_SIZE_TYPE: consumer can supply the size_type.
-3. ALLOWED_FILE_TYPES: consumer can supply the only allowed file types to be uploaded
+3. ALLOWED_FILE_EXTENSIONS: consumer can supply the only allowed file types to be uploaded
 
 ## File name
 1. consumer can supply the file name, if not specified it will default to uuid + filename
@@ -41,11 +41,12 @@ size << size_type
 
 ## size here is the total max upload for us
 ## size_type table  
-10 = KB (kilobytes)  
-20 = MB (megabytes)  
-30 = GB (gigabytes)  
-40 = TB (terabytes)   
-50 = PT (petabytes)
+10 = KB (kilobyte)  
+20 = MB (megabyte)  
+30 = GB (gigabyte)  
+40 = TB (terabyte)   
+50 = PT (petabyte)
+60 = EB (exabyte)
 
 so if we want 100 MB we denotes this as  
 100 << 20 = 100MB
