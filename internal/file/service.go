@@ -13,11 +13,15 @@ import (
 
 type Service interface {
 	upload(folder string, file multipart.File, header multipart.FileHeader) (string, error)
-	read(folder, file string) error
+	read(folder, file string) (string, error)
 	delete(folder, file string) error
 }
 
 type ServiceImpl struct {
+}
+
+func NewService() Service {
+	return &ServiceImpl{}
 }
 
 func (s ServiceImpl) upload(folder string, file multipart.File, header multipart.FileHeader) (string, error) {
@@ -26,7 +30,8 @@ func (s ServiceImpl) upload(folder string, file multipart.File, header multipart
 		return "", err
 	}
 
-	// Ensuring user is in upload dir and the folder exists
+	// Checks if folder exists
+	// Checks if consumer is in upload dir only
 	sanitizedFolder := f.SanitizeName(folder)
 	folderPath := filepath.Join(uploadDir, sanitizedFolder)
 	if !f.IsInUploadDir(folderPath) {
@@ -38,7 +43,7 @@ func (s ServiceImpl) upload(folder string, file multipart.File, header multipart
 
 	// Checks if file already exists
 	fileName := fmt.Sprintf("%s_%s", uuid.New(), header.Filename)
-	filePath := filepath.Join(uploadDir, sanitizedFolder, fileName)
+	filePath := filepath.Join(uploadDir, sanitizedFolder, f.SanitizeName(fileName))
 	if !f.IsInUploadDir(filePath) {
 		panic("error user is not in upload directory. Terminating the program")
 	}
@@ -67,18 +72,65 @@ func (s ServiceImpl) upload(folder string, file multipart.File, header multipart
 	return fileName, nil
 }
 
-func (s ServiceImpl) read(folder, file string) error {
-	fmt.Println("Reading file " + file)
-	fmt.Println("Folder", folder)
-	return nil
+func (s ServiceImpl) read(folder, file string) (string, error) {
+	uploadDir, err := f.UseUploadDir()
+	if err != nil {
+		return "", err
+	}
+
+	// Checks if folder exists
+	// Checks if consumer is in upload dir only
+	sanitizedFolder := f.SanitizeName(folder)
+	folderPath := filepath.Join(uploadDir, sanitizedFolder)
+	if !f.IsInUploadDir(folderPath) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
+		return "", errors.New("folder does not exist")
+	}
+
+	// Checks if file already exists
+	filePath := filepath.Join(uploadDir, sanitizedFolder, f.SanitizeName(file))
+	if !f.IsInUploadDir(filePath) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return "", errors.New("file doesn't exists")
+	}
+
+	return filePath, nil
 }
 
 func (s ServiceImpl) delete(folder, file string) error {
-	fmt.Println("Deleting file " + file)
-	fmt.Println("Folder", folder)
-	return nil
-}
+	uploadDir, err := f.UseUploadDir()
+	if err != nil {
+		return err
+	}
 
-func NewService() Service {
-	return &ServiceImpl{}
+	// Checks if folder exists
+	// Checks if consumer is in upload dir only
+	sanitizedFolder := f.SanitizeName(folder)
+	folderPath := filepath.Join(uploadDir, sanitizedFolder)
+	if !f.IsInUploadDir(folderPath) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
+		return errors.New("folder does not exist")
+	}
+
+	// Checks if file already exists
+	filePath := filepath.Join(uploadDir, sanitizedFolder, f.SanitizeName(file))
+	if !f.IsInUploadDir(filePath) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return errors.New("file doesn't exists")
+	}
+
+	err = os.Remove(filePath)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -21,14 +21,34 @@ Answer: Yes because this project uses filepath methods which is Clean(), Base(),
 1. Checks if folder is in upload dir 
 2. Checks if folder exists 
 3. Checks if the file extension of file is in ALLOWED_FILE_TYPES
+4. Checks the file size
 
 ### File Validation edge cases
 1. Only get the first extension name of file file.pdf.gif.png results to file.pdf only
 2. After that we need to ensure that the file extension matches to its contents when file is picture so thats file.jpg and user renamed it to file.pdf we need to detect this.
 
 ## File env config
-1. MAX_UPLOAD_SIZE_IN_MB: consumer can supply the max mb allowed.
-2. ALLOWED_FILE_TYPES: consumer can supply the only allowed file types to be uploaded
+1. MAX_FILE_SIZE: consumer can supply the max size allowed.
+2. MAX_FILE_SIZE_TYPE: consumer can supply the size_type.
+3. ALLOWED_FILE_TYPES: consumer can supply the only allowed file types to be uploaded
 
 ## File name
 1. consumer can supply the file name, if not specified it will default to uuid + filename
+
+# Setting the MAX_FILE_SIZE_TYPE guide in bit shift
+for example:
+size << size_type
+
+## size here is the total max upload for us
+## size_type table  
+10 = KB (kilobytes)  
+20 = MB (megabytes)  
+30 = GB (gigabytes)  
+40 = TB (terabytes)   
+50 = PT (petabytes)
+
+so if we want 100 MB we denotes this as  
+100 << 20 = 100MB
+
+for 2GB
+2 << 30 = 2GB
