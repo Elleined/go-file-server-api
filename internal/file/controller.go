@@ -33,6 +33,7 @@ func (c ControllerImpl) RegisterRoutes(ctx *gin.Engine) {
 }
 
 func (c ControllerImpl) upload(ctx *gin.Context) {
+	// Getting file from request
 	file, header, err := ctx.Request.FormFile("file")
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -47,17 +48,17 @@ func (c ControllerImpl) upload(ctx *gin.Context) {
 		}
 	}(file)
 
+	// Uploading file to local machine
 	folder := ctx.Param("folder")
-	if err := c.service.upload(folder, file, *header); err != nil {
+	fileName, err := c.service.upload(folder, file, *header)
+	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "can't upload file " + err.Error(),
 		})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "successfully uploaded " + header.Filename,
-	})
+	ctx.JSON(http.StatusOK, fileName)
 }
 
 func (c ControllerImpl) read(ctx *gin.Context) {

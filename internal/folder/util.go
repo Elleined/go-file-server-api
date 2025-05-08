@@ -12,16 +12,17 @@ func UseUploadDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	path := filepath.Join(home, SanitizeName(os.Getenv("UPLOAD_ROOT_FOLDER")))
 	return path, nil
 }
 
+// SanitizeName name to ensure traversal attacks are prevented. Only use inside the join filepath method
 func SanitizeName(name string) string {
 	return filepath.Base(filepath.Clean(name))
 }
 
-// IsInUploadDir returns whether the user is still in upload dir. Best use after joining path
+// IsInUploadDir returns whether the user is still in upload dir. Only use after joining path
 func IsInUploadDir(path string) bool {
 	uploadDir, err := UseUploadDir()
 	if err != nil {

@@ -21,7 +21,7 @@ func NewService() Service {
 
 func (s ServiceImpl) create(name string) (sanitizeName string, err error) {
 	if strings.TrimSpace(name) == "" {
-		return "", errors.New("name is empty")
+		return "", errors.New("name is required")
 	}
 
 	uploadDir, err := UseUploadDir()
@@ -30,6 +30,7 @@ func (s ServiceImpl) create(name string) (sanitizeName string, err error) {
 	}
 
 	sanitizeName = SanitizeName(name)
+
 	path := filepath.Join(uploadDir, sanitizeName)
 	if !IsInUploadDir(path) {
 		panic("error user is not in upload directory. Terminating the program")
@@ -45,7 +46,7 @@ func (s ServiceImpl) create(name string) (sanitizeName string, err error) {
 
 func (s ServiceImpl) remove(name string) error {
 	if strings.TrimSpace(name) == "" {
-		return errors.New("name is empty")
+		return errors.New("name is required")
 	}
 
 	uploadDir, err := UseUploadDir()
@@ -58,9 +59,13 @@ func (s ServiceImpl) remove(name string) error {
 		panic("error user is not in upload directory. Terminating the program")
 	}
 
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return errors.New("folder does not exist")
+	}
+
 	err = os.RemoveAll(path)
 	if err != nil {
-		return errors.New("folder not exists")
+		return err
 	}
 
 	return nil

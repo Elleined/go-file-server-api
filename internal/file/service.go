@@ -3,16 +3,16 @@ package file
 import (
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	f "go-file-server-api/internal/folder"
 	"io"
 	"mime/multipart"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type Service interface {
-	upload(folder string, file multipart.File, header multipart.FileHeader) error
+	upload(folder string, file multipart.File, header multipart.FileHeader) (string, error)
 	read(folder, file string) error
 	delete(folder, file string) error
 }
@@ -20,24 +20,27 @@ type Service interface {
 type ServiceImpl struct {
 }
 
-func (s ServiceImpl) upload(folder string, file multipart.File, header multipart.FileHeader) error {
-	if strings.TrimSpace(folder) == "" {
-		return errors.New("folder is required")
-	}
-
-	if file == nil {
-		return errors.New("file is required")
-	}
-
+func (s ServiceImpl) upload(folder string, file multipart.File, header multipart.FileHeader) (string, error) {
 	uploadDir, err := f.UseUploadDir()
 	if err != nil {
-		return err
+		return "", err
+	}
+
+	// Ensuring user is in upload dir and folder exists
+	sanitizeFolder := f.SanitizeName(folder)
+	folderPath := filepath.Join(uploadDir, sanitizeFolder)
+	if !f.IsInUploadDir(folderPath) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
+		return "", errors.New("folder does not exist")
 	}
 
 	// Creating the output destination of the file
-	dst, err := os.Create(filepath.Join(uploadDir, folder, filepath.Base(header.Filename)))
+	fileName := fmt.Sprintf("%s_%s", uuid.New(), header.Filename)
+	dst, err := os.Create(filepath.Join(uploadDir, sanitizeFolder, fileName))
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer func(dst *os.File) {
 		err := dst.Close()
@@ -49,10 +52,10 @@ func (s ServiceImpl) upload(folder string, file multipart.File, header multipart
 	// Copying the file to local machine
 	_, err = io.Copy(dst, file)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return fileName, nil
 }
 
 func (s ServiceImpl) read(folder, file string) error {
