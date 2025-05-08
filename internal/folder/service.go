@@ -58,7 +58,6 @@ func (s ServiceImpl) remove(name string) error {
 	if !IsInUploadDir(path) {
 		panic("error user is not in upload directory. Terminating the program")
 	}
-
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return errors.New("folder does not exist")
 	}

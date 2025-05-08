@@ -88,7 +88,5 @@ func (c ControllerImpl) delete(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "successfully deleted file " + file,
-	})
+	ctx.JSON(http.StatusNoContent, nil)
 }

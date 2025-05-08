@@ -26,9 +26,9 @@ func (s ServiceImpl) upload(folder string, file multipart.File, header multipart
 		return "", err
 	}
 
-	// Ensuring user is in upload dir and folder exists
-	sanitizeFolder := f.SanitizeName(folder)
-	folderPath := filepath.Join(uploadDir, sanitizeFolder)
+	// Ensuring user is in upload dir and the folder exists
+	sanitizedFolder := f.SanitizeName(folder)
+	folderPath := filepath.Join(uploadDir, sanitizedFolder)
 	if !f.IsInUploadDir(folderPath) {
 		panic("error user is not in upload directory. Terminating the program")
 	}
@@ -36,9 +36,18 @@ func (s ServiceImpl) upload(folder string, file multipart.File, header multipart
 		return "", errors.New("folder does not exist")
 	}
 
-	// Creating the output destination of the file
+	// Checks if file already exists
 	fileName := fmt.Sprintf("%s_%s", uuid.New(), header.Filename)
-	dst, err := os.Create(filepath.Join(uploadDir, sanitizeFolder, fileName))
+	filePath := filepath.Join(uploadDir, sanitizedFolder, fileName)
+	if !f.IsInUploadDir(filePath) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+	if _, err := os.Stat(filePath); !os.IsNotExist(err) {
+		return "", errors.New("file already exists")
+	}
+
+	// Creating the output destination of the file
+	dst, err := os.Create(filePath)
 	if err != nil {
 		return "", err
 	}
