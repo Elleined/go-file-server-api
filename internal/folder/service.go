@@ -8,8 +8,8 @@ import (
 )
 
 type Service interface {
-	create(name string) error // create outputs home + uploadDir + name
-	remove(name string) error // remove folder inside uploadDir recursively
+	create(name string) (sanitizeName string, err error) // create outputs home + uploadDir + name. sanitizeName returns the saved folder name
+	remove(name string) error                            // remove folder inside uploadDir recursively
 }
 
 type ServiceImpl struct {
@@ -19,23 +19,28 @@ func NewService() Service {
 	return &ServiceImpl{}
 }
 
-func (s ServiceImpl) create(name string) error {
+func (s ServiceImpl) create(name string) (sanitizeName string, err error) {
 	if strings.TrimSpace(name) == "" {
-		return errors.New("name is empty")
+		return "", errors.New("name is empty")
 	}
 
 	uploadDir, err := UseUploadDir()
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	path := filepath.Join(uploadDir, filepath.Clean(name))
+	sanitizeName = SanitizeName(name)
+	path := filepath.Join(uploadDir, sanitizeName)
+	if !IsInUploadDir(path) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+
 	err = os.Mkdir(path, os.ModePerm)
 	if err != nil {
-		return errors.New("folder already exists")
+		return "", errors.New("folder already exists")
 	}
 
-	return nil
+	return sanitizeName, nil
 }
 
 func (s ServiceImpl) remove(name string) error {
@@ -48,7 +53,11 @@ func (s ServiceImpl) remove(name string) error {
 		return err
 	}
 
-	path := filepath.Join(uploadDir, name)
+	path := filepath.Join(uploadDir, SanitizeName(name))
+	if !IsInUploadDir(path) {
+		panic("error user is not in upload directory. Terminating the program")
+	}
+
 	err = os.RemoveAll(path)
 	if err != nil {
 		return errors.New("folder not exists")

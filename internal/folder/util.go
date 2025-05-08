@@ -3,6 +3,7 @@ package folder
 import (
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // UseUploadDir returns home + uploadDir
@@ -11,7 +12,31 @@ func UseUploadDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	path := filepath.Join(home, os.Getenv("UPLOAD_ROOT_FOLDER"))
+	
+	path := filepath.Join(home, SanitizeName(os.Getenv("UPLOAD_ROOT_FOLDER")))
 	return path, nil
+}
+
+func SanitizeName(name string) string {
+	return filepath.Base(filepath.Clean(name))
+}
+
+// IsInUploadDir returns whether the user is still in upload dir. Best use after joining path
+func IsInUploadDir(path string) bool {
+	uploadDir, err := UseUploadDir()
+	if err != nil {
+		return false
+	}
+
+	absUploadDir, err := filepath.Abs(uploadDir)
+	if err != nil {
+		return false
+	}
+
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return false
+	}
+
+	return strings.HasPrefix(absPath, absUploadDir)
 }

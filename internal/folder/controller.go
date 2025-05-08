@@ -32,7 +32,7 @@ func (c ControllerImpl) RegisterRoutes(e *gin.Engine) {
 func (c ControllerImpl) create(e *gin.Context) {
 	name := e.Query("folder")
 
-	err := c.service.create(name)
+	sanitizedName, err := c.service.create(name)
 	if err != nil {
 		e.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -40,9 +40,7 @@ func (c ControllerImpl) create(e *gin.Context) {
 		return
 	}
 
-	e.JSON(http.StatusCreated, gin.H{
-		"message": "Folder created " + name,
-	})
+	e.JSON(http.StatusCreated, sanitizedName)
 }
 
 func (c ControllerImpl) remove(e *gin.Context) {
@@ -56,7 +54,5 @@ func (c ControllerImpl) remove(e *gin.Context) {
 		return
 	}
 
-	e.JSON(http.StatusCreated, gin.H{
-		"message": "Folder removed " + name,
-	})
+	e.JSON(http.StatusNoContent, nil)
 }
