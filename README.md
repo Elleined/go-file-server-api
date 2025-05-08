@@ -1,3 +1,13 @@
+# How to use
+1. Supply the .env file properties
+2. Note that the root folder will be created in current user home folder
+
+# Feature to be added
+1. swagger documentation
+2. Add logging statements
+3. Add test cases
+4. Docker command documentation
+
 # FAQS
 Question: What if the folder or file doesn't exists and you try to access it  
 Answer: It will return an error if the folder doesn't exists

@@ -34,6 +34,7 @@ func init() {
 }
 
 func main() {
+	gin.SetMode(os.Getenv("GIN_MODE"))
 	r := gin.Default()
 
 	// Root endpoint
@@ -61,7 +62,8 @@ func main() {
 	fileController := file.NewController(fileService)
 	fileController.RegisterRoutes(r)
 
-	err = r.Run(os.Getenv("PORT"))
+	port := os.Getenv("PORT")
+	err = r.Run(port)
 	if err != nil {
 		return
 	}
