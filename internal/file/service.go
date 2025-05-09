@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	f "go-file-server-api/internal/folder"
 	"io"
+	"log"
 	"mime/multipart"
 	"os"
 	"path/filepath"
@@ -69,6 +70,7 @@ func (s ServiceImpl) upload(folder string, file multipart.File, header multipart
 		return "", err
 	}
 
+	log.Printf("Uploading %s to %s", fileName, folderPath)
 	return fileName, nil
 }
 
@@ -90,7 +92,8 @@ func (s ServiceImpl) read(folder, file string) (string, error) {
 	}
 
 	// Checks if file already exists
-	filePath := filepath.Join(uploadDir, sanitizedFolder, f.SanitizeName(file))
+	fileName := f.SanitizeName(file)
+	filePath := filepath.Join(uploadDir, sanitizedFolder, fileName)
 	if !f.IsInUploadDir(filePath) {
 		panic("error user is not in upload directory. Terminating the program")
 	}
@@ -98,6 +101,7 @@ func (s ServiceImpl) read(folder, file string) (string, error) {
 		return "", errors.New("file doesn't exists")
 	}
 
+	log.Printf("Reading file %s from folder %s\n", fileName, folderPath)
 	return filePath, nil
 }
 
@@ -119,7 +123,8 @@ func (s ServiceImpl) delete(folder, file string) error {
 	}
 
 	// Checks if file already exists
-	filePath := filepath.Join(uploadDir, sanitizedFolder, f.SanitizeName(file))
+	fileName := f.SanitizeName(file)
+	filePath := filepath.Join(uploadDir, sanitizedFolder, fileName)
 	if !f.IsInUploadDir(filePath) {
 		panic("error user is not in upload directory. Terminating the program")
 	}
@@ -132,5 +137,6 @@ func (s ServiceImpl) delete(folder, file string) error {
 		return err
 	}
 
+	log.Printf("Deleted file %s from folder %s\n", fileName, folderPath)
 	return nil
 }

@@ -35,7 +35,8 @@ func init() {
 
 func main() {
 	gin.SetMode(os.Getenv("GIN_MODE"))
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger(), gin.Recovery())
 
 	// Root endpoint
 	r.GET("/", func(c *gin.Context) {
@@ -67,4 +68,6 @@ func main() {
 	if err != nil {
 		return
 	}
+
+	log.Println("Server running on port", port)
 }

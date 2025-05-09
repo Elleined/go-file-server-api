@@ -2,6 +2,7 @@ package folder
 
 import (
 	"errors"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -41,6 +42,7 @@ func (s ServiceImpl) create(name string) (sanitizeName string, err error) {
 		return "", errors.New("folder already exists")
 	}
 
+	log.Println("Folder created:", path)
 	return sanitizeName, nil
 }
 
@@ -67,5 +69,6 @@ func (s ServiceImpl) remove(name string) error {
 		return err
 	}
 
+	log.Println("Folder removed:", path)
 	return nil
 }

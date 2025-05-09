@@ -3,10 +3,8 @@
 2. Note that the root folder will be created in current user home folder
 
 # Feature to be added
-1. swagger documentation
-2. Add logging statements
-3. Add test cases
-4. Docker command documentation
+1. Add test cases
+2. Supply the .env dynamically in docker run
 
 # FAQS
 Question: What if the folder or file doesn't exists and you try to access it  
@@ -63,3 +61,13 @@ so if we want 100 MB we denotes this as
 
 for 2GB
 2 << 30 = 2GB
+
+# Run with docker
+```
+docker run -itd --rm --name file-server-api -p 8090:8090 elleined/go-file-server-api:latest
+```
+`--rm` removes the container on exit.  
+`-itd` runs the container in detached mode.  
+`--name file-server-api` name of the container.  
+`-p 8090:8090` map the port from host to container.  
+`elleined/go-file-server-api:latest` docker image to run.  
