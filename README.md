@@ -1,11 +1,21 @@
 # How to use
-1. Add Environment variable the `GIN_MODE` in IDE itself or in local machine directly.
-### Possible values (debug, release, and test)
-   - When set to debug mode the godotenv will load the .env file automatically from file system.
-   - When set to release mode you need to specify the .env file dynamically with `-e` or `--env-file` in docker. or environment variables in your IDE
+### in debug mode (development)
+1. Add environment variable `GIN_MODE=debug` in IDE itself.
+2. Supply the proper values for .env file present locally in this project folder because godotenv will load it and that will used in project. 
 
-Example:  
-`GIN_MODE=release`
+### in release mode (production)
+1. Add docker `-e GIN_MODE=release`
+2. When in release mode you need to dynamically supply the .env file absolutely!  
+Use `-e KEY=VALUE` to supply the individual env variables. (not recommended)  
+Use `--env-file .env` to supply the .env file (recommended)  
+
+## In summary you need to do to run these project is
+1. The first important step you need to do is set the GIN_MODE
+2. The second step is set the env variables.
+
+## My recommendation to run these project
+- Use docker for release mode (production) because the command are provided below and you dont need to tweak the local machine environment variable just to run these project.
+- When you want to run the project in debug mode (development) since you can use the IDE to set the GIN_MODE and theres a godotenv to load the environment variable automatically
 
 # FAQS
 Question: What if the folder or file doesn't exists and you try to access it  
