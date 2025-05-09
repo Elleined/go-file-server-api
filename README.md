@@ -83,9 +83,13 @@ For example: When you supply `ALLOWED_FILE_EXTENSIONS: images,documents` it will
 | archives  | .zip, .rar, .tar, .gz, .7z                                                                       |
 | code      | .go, .js, .mjs, .ts, .py, .java, .c, .cpp, .h, .hpp, .html, .htm, .css, .sh, .bash, .php, .json, .yaml, .yml |
 
+
+# Limitations
+1. Can't create a nested folder, folder only created in uploadDir only
+
 # Run with docker
 ```
-docker run -itd --rm --name file-server-api --env-file .env -p 8090:8090 elleined/go-file-server-api:latest
+docker run -itd --rm --name file-server-api --env-file .env -p 8090:8090 elleined/go-file-server-api:v1.0.0
 ```
 `-itd` runs the container in background mode.  
 `--rm` removes the container on exit.  
