@@ -4,7 +4,8 @@
 2. Supply the proper values for .env file present locally in this project folder because godotenv will load it and that will used in project. 
 
 ### in release mode (production)
-1. You need to dynamically supply the .env file absolutely!  
+1. Default mode! If GIN_MODE is set to release or blank it will run in release mode
+2. You need to dynamically supply the .env file absolutely!  
 Use `-e KEY=VALUE` to supply the individual env variables. (not recommended)  
 Use `--env-file .env` to supply the .env file (recommended)
 
