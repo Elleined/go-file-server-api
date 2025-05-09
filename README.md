@@ -1,14 +1,9 @@
 # How to use
 1. Supply the .env file properties
-2. Note that the root folder will be created in current user home folder
-
-# Feature to be added
-1. Add test cases
-2. Supply the .env dynamically in docker run
 
 # FAQS
 Question: What if the folder or file doesn't exists and you try to access it  
-Answer: It will return an error if the folder doesn't exists
+Answer: It will return an error if the folder or file doesn't exists
 
 Question: Does the user input fully sanitized? To prevent them accessing the local file tree?  
 Answer: Yes because this project uses filepath methods which is Clean(), Base(), Join(), and Abs().
@@ -40,27 +35,43 @@ Answer: Yes because this project uses filepath methods which is Clean(), Base(),
 2. MAX_FILE_SIZE_TYPE: consumer can supply the size_type.
 3. ALLOWED_FILE_EXTENSIONS: consumer can supply the only allowed file types to be uploaded
 
-## File name
-1. consumer can supply the file name, if not specified it will default to uuid + filename
+# File size documentation
+`size << size_type`
 
-# Setting the MAX_FILE_SIZE_TYPE guide in bit shift
-for example:
-size << size_type
+| Code | Unit      | Description  |
+|------|-----------|--------------|
+| 10   | KB        | Kilobyte     |
+| 20   | MB        | Megabyte     |
+| 30   | GB        | Gigabyte     |
+| 40   | TB        | Terabyte     |
+| 50   | PT        | Petabyte     |
+| 60   | EB        | Exabyte      |
 
-## size here is the total max upload for us
-## size_type table  
-10 = KB (kilobyte)  
-20 = MB (megabyte)  
-30 = GB (gigabyte)  
-40 = TB (terabyte)   
-50 = PT (petabyte)
-60 = EB (exabyte)
+## Usage
+Example: So if we want 100 MB we denotes this as  
+`100 << 20 = 100MB`
 
-so if we want 100 MB we denotes this as  
-100 << 20 = 100MB
+Another example: for 2GB  
+`2 << 30 = 2GB`
 
-for 2GB
-2 << 30 = 2GB
+# File types documentation
+
+## How these works
+So when you supply the `ALLOWED_FILE_EXTENSIONS` values in .env the app will allow only the specified categories.
+
+For example: When you supply `ALLOWED_FILE_EXTENSIONS: images,documents` it will only allow the file extensions under the images and documents category
+
+## Supported file types table
+| Category  | Extensions                                                                                      |
+|-----------|-------------------------------------------------------------------------------------------------|
+| documents | .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, .txt, .rtf, .md, .odt, .ods, .odp                  |
+| images    | .jpg, .jpeg, .png, .gif, .bmp, .webp, .svg, .tif, .tiff, .raw, .cr2, .nef, .arw                 |
+| videos    | .mp4, .webm, .avi, .mov, .mkv, .flv, .wmv, .3gp                                                  |
+| audio     | .mp3, .wav, .aac, .ogg, .flac, .m4a                                                              |
+| archives  | .zip, .rar, .tar, .gz, .7z                                                                       |
+| code      | .go, .js, .mjs, .ts, .py, .java, .c, .cpp, .h, .hpp, .html, .htm, .css, .sh, .bash, .php, .json, .yaml, .yml |
+
+
 
 # Run with docker
 ```
