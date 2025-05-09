@@ -1,17 +1,12 @@
 # How to use
 ### in debug mode (development)
-1. Add environment variable `GIN_MODE=debug` in IDE itself.
+1. Add environment variable `GIN_MODE=debug` in IDE itself. or else it will run in release mode when GIN_MODE is not supplied.
 2. Supply the proper values for .env file present locally in this project folder because godotenv will load it and that will used in project. 
 
 ### in release mode (production)
-1. Add docker `-e GIN_MODE=release`
-2. When in release mode you need to dynamically supply the .env file absolutely!  
+1. You need to dynamically supply the .env file absolutely!  
 Use `-e KEY=VALUE` to supply the individual env variables. (not recommended)  
-Use `--env-file .env` to supply the .env file (recommended)  
-
-## In summary you need to do to run these project is
-1. The first important step you need to do is set the GIN_MODE
-2. The second step is set the env variables.
+Use `--env-file .env` to supply the .env file (recommended)
 
 ## My recommendation to run these project
 - Use docker for release mode (production) because the command are provided below and you dont need to tweak the local machine environment variable just to run these project.
@@ -89,7 +84,7 @@ For example: When you supply `ALLOWED_FILE_EXTENSIONS: images,documents` it will
 
 # Run with docker
 ```
-docker run -itd --rm --name file-server-api -e GIN_MODE=release --env-file .env -p 8090:8090 elleined/go-file-server-api:latest
+docker run -itd --rm --name file-server-api --env-file .env -p 8090:8090 elleined/go-file-server-api:latest
 ```
 `-itd` runs the container in background mode.  
 `--rm` removes the container on exit.  

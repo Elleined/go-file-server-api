@@ -8,15 +8,18 @@ import (
 	mw "go-file-server-api/middleware"
 	"log"
 	"os"
+	"strings"
 )
 
 func init() {
 	ginMode := os.Getenv("GIN_MODE")
-	gin.SetMode(ginMode)
 
 	// Only load the godotenv when running in debug mode
 	// But in release mode the .env will be supplied dynamically
-	if ginMode == "debug" {
+	if ginMode == gin.ReleaseMode || strings.TrimSpace(ginMode) == "" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
 		err := godotenv.Load(".env")
 		if err != nil {
 			panic("Error loading .env file")
