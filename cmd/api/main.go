@@ -74,8 +74,6 @@ func main() {
 	port := os.Getenv("PORT")
 	err = r.Run(port)
 	if err != nil {
-		return
+		panic("Failed to start server: " + err.Error())
 	}
-
-	log.Println("Server running on port", port)
 }
