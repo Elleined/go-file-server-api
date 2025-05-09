@@ -11,10 +11,16 @@ import (
 )
 
 func init() {
-	// Initialize godotenv
-	err := godotenv.Load(".env")
-	if err != nil {
-		panic("Error loading .env file")
+	ginMode := os.Getenv("GIN_MODE")
+	gin.SetMode(ginMode)
+
+	// Only load the godotenv when running in debug mode
+	// But in release mode the .env will be supplied dynamically
+	if ginMode == "debug" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			panic("Error loading .env file")
+		}
 	}
 
 	uploadDir, err := folder.UseUploadDir()
@@ -34,7 +40,6 @@ func init() {
 }
 
 func main() {
-	gin.SetMode(os.Getenv("GIN_MODE"))
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 

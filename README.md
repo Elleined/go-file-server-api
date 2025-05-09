@@ -1,5 +1,11 @@
 # How to use
-1. Supply the .env file properties
+1. Add Environment variable the `GIN_MODE` in IDE itself or in local machine directly.
+### Possible values (debug, release, and test)
+   - When set to debug mode the godotenv will load the .env file automatically from file system.
+   - When set to release mode you need to specify the .env file dynamically with `-e` or `--env-file` in docker. or environment variables in your IDE
+
+Example:  
+`GIN_MODE=release`
 
 # FAQS
 Question: What if the folder or file doesn't exists and you try to access it  
@@ -71,14 +77,13 @@ For example: When you supply `ALLOWED_FILE_EXTENSIONS: images,documents` it will
 | archives  | .zip, .rar, .tar, .gz, .7z                                                                       |
 | code      | .go, .js, .mjs, .ts, .py, .java, .c, .cpp, .h, .hpp, .html, .htm, .css, .sh, .bash, .php, .json, .yaml, .yml |
 
-
-
 # Run with docker
 ```
-docker run -itd --rm --name file-server-api -p 8090:8090 elleined/go-file-server-api:latest
+docker run -itd --rm --name file-server-api --env-file .env -p 8090:8090 elleined/go-file-server-api:latest
 ```
+`-itd` runs the container in background mode.  
 `--rm` removes the container on exit.  
-`-itd` runs the container in detached mode.  
 `--name file-server-api` name of the container.  
+`--env-file .env` supply the environment variable to be used by the app.  
 `-p 8090:8090` map the port from host to container.  
-`elleined/go-file-server-api:latest` docker image to run.  
+`elleined/go-file-server-api:latest` docker image to run.
