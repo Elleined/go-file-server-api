@@ -79,7 +79,7 @@ For example: When you supply `ALLOWED_FILE_EXTENSIONS: images,documents` it will
 
 # Run with docker
 ```
-docker run -itd --rm --name file-server-api --env-file .env -p 8090:8090 elleined/go-file-server-api:latest
+docker run -itd --rm --name file-server-api -e GIN_MODE=release --env-file .env -p 8090:8090 elleined/go-file-server-api:latest
 ```
 `-itd` runs the container in background mode.  
 `--rm` removes the container on exit.  
