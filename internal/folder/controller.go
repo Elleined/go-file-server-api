@@ -24,13 +24,13 @@ func NewController(service Service) Controller {
 func (c ControllerImpl) RegisterRoutes(e *gin.Engine) {
 	r := e.Group("/folders")
 	{
-		r.POST("/", c.create)
+		r.POST("/:folder", c.create)
 		r.DELETE("/:folder", c.remove)
 	}
 }
 
 func (c ControllerImpl) create(e *gin.Context) {
-	name := e.Query("folder")
+	name := e.Param("folder")
 
 	sanitizedName, err := c.service.create(name)
 	if err != nil {
