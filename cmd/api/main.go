@@ -60,6 +60,7 @@ func main() {
 
 	// Initialize middlewares
 	r.Use(mw.SecurityHeaders)
+	r.Use(mw.Cors())
 
 	// Initialize folder module
 	folderService := folder.NewService()
