@@ -38,10 +38,6 @@ Answer: Yes because this project uses filepath methods which is Clean(), Base(),
 3. Checks if the file extension of file is in ALLOWED_FILE_EXTENSIONS
 4. Checks the file size
 
-### File Validation edge cases
-1. Only get the first extension name of file file.pdf.gif.png results to file.pdf only
-2. After that we need to ensure that the file extension matches to its contents when file is picture so thats file.jpg and user renamed it to file.pdf we need to detect this.
-
 ## File env config
 1. MAX_FILE_SIZE: consumer can supply the max size allowed.
 2. MAX_FILE_SIZE_TYPE: consumer can supply the size_type.
